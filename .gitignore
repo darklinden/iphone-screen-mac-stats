@@ -1,0 +1,15 @@
+# 构建产物
+build/
+
+# SwiftPM：make 已用 --scratch-path 把产物引到 build/，但绕过 Makefile
+# 直接跑 swift build 会在包目录里生成 .build/，别让它进仓库
+.build/
+.swiftpm/
+
+# Xcode 的用户级状态
+xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# macOS
+.DS_Store

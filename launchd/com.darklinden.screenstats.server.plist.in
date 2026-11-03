@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  服务端用户级 LaunchAgent 模板（M6）。由 `make service-install` 渲染到
+  ~/Library/LaunchAgents/com.darklinden.screenstats.server.plist。
+
+  __BIN__ / __LOG__ 是占位符，安装时替换成当前用户的绝对路径——
+  仓库里不允许出现硬编码的 /Users/... 路径。
+
+  RunAtLoad + KeepAlive：登录时自动起，进程掉了自动拉起来。
+  注意：正因为 KeepAlive，停服务必须用 `launchctl bootout`（make service-stop），
+  用 kill 杀进程只会被立刻重启。
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.darklinden.screenstats.server</string>
+
+	<key>ProgramArguments</key>
+	<array>
+		<string>__BIN__</string>
+		<string>--port</string>
+		<string>8737</string>
+	</array>
+
+	<key>RunAtLoad</key>
+	<true/>
+
+	<key>KeepAlive</key>
+	<true/>
+
+	<key>StandardOutPath</key>
+	<string>__LOG__</string>
+
+	<key>StandardErrorPath</key>
+	<string>__LOG__</string>
+</dict>
+</plist>

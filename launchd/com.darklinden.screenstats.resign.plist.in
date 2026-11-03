@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  客户端续签任务模板（M6）。由 `make service-resign-install` 渲染到
+  ~/Library/LaunchAgents/com.darklinden.screenstats.resign.plist。
+
+  __RESIGN_SH__ / __LOG__ / __INTERVAL__ / __ARGS__ 是占位符，安装时替换——
+  仓库里不允许出现硬编码的 /Users/... 路径。
+
+  为什么需要它：免费开发者账号的 provisioning profile 只有 7 天寿命
+  （TimeToLive = 7），过期后手机上的 App 直接起不来，副屏变黑。
+  手动做法是每周开 Xcode 按一次 ⌘R；resign.sh 把它自动化。
+  resign.sh 自己判断剩余寿命，没到期就空转，所以跑得勤不费事。
+
+  __ARGS__ 为空时渲染成一个空字符串参数，resign.sh 会忽略它。
+  验收时用：
+    make service-resign-install RESIGN_INTERVAL=300 RESIGN_ARGS=--force
+  让它每 5 分钟无条件重新签名 + 重装一次。
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.darklinden.screenstats.resign</string>
+
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>__RESIGN_SH__</string>
+		<string>__ARGS__</string>
+	</array>
+
+	<!-- 每 __INTERVAL__ 秒跑一次。默认 86400（一天）。 -->
+	<key>StartInterval</key>
+	<integer>__INTERVAL__</integer>
+
+	<!-- 登录时也跑一次：resign.sh 会先判断要不要动手，空转很便宜。 -->
+	<key>RunAtLoad</key>
+	<true/>
+
+	<key>StandardOutPath</key>
+	<string>__LOG__</string>
+	<key>StandardErrorPath</key>
+	<string>__LOG__</string>
+</dict>
+</plist>
